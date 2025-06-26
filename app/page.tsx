@@ -9,7 +9,8 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <WordForm letters={letters} validWords={validWords} />
+      <h1 className="text-4xl font-bold mb-6">Word Hive</h1>
+      <WordForm letters={letters} validWords={validWords} totalPossibleScore={totalPossibleScore} />
     </div>
   );
 }
