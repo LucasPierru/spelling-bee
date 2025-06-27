@@ -25,8 +25,8 @@ export default function WordForm({
     { name: "legend", value: 0.7 },
   ];
 
-  console.log("Generated letters:", letters);
-  console.log("Valid words:", validWords);
+  /* console.log("Generated letters:", letters);
+  console.log("Valid words:", validWords); */
 
   const guessWord = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === "Enter") {
@@ -48,29 +48,6 @@ export default function WordForm({
     return Array.from(guesses.values()).reduce((acc, score) => acc + score, 0);
   };
 
-  const testList: [string, number][] = [
-    ["apple", 10],
-    ["banana", 5],
-    ["cherry", 8],
-    ["date", 4],
-    ["elderberry", 12],
-    ["fig", 3],
-    ["grape", 6],
-    ["honeydew", 9],
-    ["kiwi", 7],
-    ["lemon", 4],
-    ["mango", 5],
-    ["nectarine", 11],
-    ["orange", 6],
-    ["papaya", 8],
-    ["quince", 10],
-    ["raspberry", 12],
-    ["strawberry", 14],
-    ["tangerine", 9],
-    ["ugli", 11],
-    ["vanilla", 15],
-  ];
-
   const getCurrentLevel = (): string => {
     const score = getTotalScore();
     const reversedLevels = [...levels].reverse();
@@ -82,7 +59,7 @@ export default function WordForm({
   const currentLevel = getCurrentLevel();
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col min-w-lg justify-between gap-6">
       <Input onKeyDown={guessWord} />
       <div className="flex flex-wrap justify-center gap-4">
         {letters.map((letter, index) => (
@@ -93,7 +70,7 @@ export default function WordForm({
           />
         ))}
       </div>
-      <div className="relative flex justify-between items-center">
+      <div className="relative flex justify-between items-center min-h-10">
         {levels.map((level, index) => (
           <div
             key={index}
@@ -109,8 +86,8 @@ export default function WordForm({
         ))}
       </div>
       <div className="flex flex-col flex-wrap gap-2 max-h-60 overflow-y-auto">
-        {testList.map(([guess], index) => (
-          <div key={index} className="text-lg mx-2 font-semibold border-b border-border py-2">
+        {Array.from(guesses).map(([guess], index) => (
+          <div key={index} className="text-lg mx-2 font-semibold border-b border-border py-2 w-fit pr-1">
             {capitalizeFirstLetter(guess)}
             {/*  - {score} */}
           </div>

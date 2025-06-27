@@ -1,22 +1,9 @@
-export const words: string[] = ["bake", "coal", "door", "farm", "gate", "hope", "iron", "joke", "kite", "lamp",
-  "mint", "nest", "oven", "pink", "quiz", "rope", "salt", "tent", "urge", "vast",
-  "wolf", "xray", "yarn", "zero", "ally", "bush", "clap", "dusk", "envy", "flux",
-  "apple", "brave", "cabin", "daisy", "eagle", "flute", "grape", "honey", "ivory", "jelly",
-  "karma", "lemon", "mango", "noble", "onion", "pearl", "quiet", "river", "scale", "tiger",
-  "umbra", "vivid", "witty", "xenon", "young", "zebra", "blink", "crisp", "dream", "equip",
-  "banana", "castle", "danger", "effort", "forest", "garage", "hammer", "income", "jungle", "kitten",
-  "legend", "magnet", "native", "orange", "palace", "quartz", "rescue", "silent", "ticket", "unfold",
-  "violet", "wander", "yellow", "zealot", "admire", "bridge", "circle", "debate", "empire", "fabric",
-  "balloon", "candles", "diamond", "economy", "freight", "glacier", "harvest", "isolate", "journey", "kingdom",
-  "lawyers", "monster", "notable", "optimum", "picture", "quicken", "railway", "satisfy", "tension", "unicorn",
-  "vulture", "warrior", "xeroxed", "yearnly", "zephyrs", "activity", "backpack", "campaign", "delivery", "election", "function", "generate", "hospital", "industry", "judgment",
-  "kneeling", "language", "medicine", "narrator", "observer", "painting", "quantity", "reliable", "scenario", "training",
-  "apartment", "basketball", "classroom", "democracy", "equipment", "foundation", "greenhouse", "horseback", "invisible", "jewellery",
-  "kilometer", "landscape", "motorbike", "newspaper", "overthrow", "population", "quickness", "reluctant", "structure", "technology"
-];
+import wordList from "../data/word.json";
+
+export const words: string[] = wordList.filter(key => key.length >= 4);
 
 export const generateLetterSet = (): string[] => {
-  const potentialPangrams = getAllPotentialPangrams();
+  const potentialPangrams = getAllPotentialPangrams(words);
   const randomWord = potentialPangrams[Math.floor(Math.random() * potentialPangrams.length)];
   return Array.from(new Set(randomWord));
 };
@@ -27,7 +14,7 @@ export const hasSevenUniqueLetters = (word: string): boolean => {
   return uniqueLetters.size === 7;
 }
 
-export const getAllPotentialPangrams = (): string[] => {
+export const getAllPotentialPangrams = (words: string[]): string[] => {
   return words.filter(word => hasSevenUniqueLetters(word));
 };
 
