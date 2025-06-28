@@ -3,7 +3,8 @@
 import { KeyboardEvent, useState } from "react";
 import LetterCard from "../letter-card/letter-card";
 import { Input } from "../ui/input";
-import { calculateWordScore, capitalizeFirstLetter } from "@/lib/words";
+import { calculateWordScore, capitalizeFirstLetter, isWordPangram } from "@/lib/words";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function WordForm({
   letters,
@@ -16,6 +17,7 @@ export default function WordForm({
 }) {
   const [guesses, setGuesses] = useState<Map<string, number>>(new Map());
   const levels = [
+    { name: "start", value: 0 },
     { name: "beginner", value: 0.1 },
     { name: "intermediate", value: 0.2 },
     { name: "advanced", value: 0.3 },
@@ -32,12 +34,28 @@ export default function WordForm({
     if (event.key === "Enter") {
       const value = event.currentTarget.value.toLowerCase();
       if (guesses.has(value)) {
-        console.warn("Word already guessed:", value);
         event.currentTarget.value = "";
+        toast.error("Word already guessed");
         return;
       }
       if (validWords.has(value)) {
+        const isPangram = isWordPangram(value, letters);
         const score = calculateWordScore(value, letters);
+        if (isPangram) {
+          toast(`Found a pangram! +${score}`, {
+            style: {
+              background: "#FDC601",
+              fontWeight: "semi-bold",
+            },
+          });
+        } else {
+          toast(`Good guess! +${score}`, {
+            style: {
+              background: "#FDC601",
+              fontWeight: "semi-bold",
+            },
+          });
+        }
         setGuesses((prev) => new Map(prev).set(value, score));
         event.currentTarget.value = "";
       }
@@ -58,6 +76,8 @@ export default function WordForm({
   const totalScore = getTotalScore();
   const currentLevel = getCurrentLevel();
 
+  console.log({ validWords });
+
   return (
     <div className="flex flex-col min-w-lg justify-between gap-6">
       <Input onKeyDown={guessWord} />
@@ -74,14 +94,17 @@ export default function WordForm({
         {levels.map((level, index) => (
           <div
             key={index}
-            className={`flex justify-center items-center text-sm text-black font-semibold ${
-              totalScore > Math.round(totalPossibleScore * level.value) ? "bg-yellow-400" : "bg-gray-300"
+            className={`transition-[width] duration-300 ease-in-out flex justify-center items-center text-black font-semibold ${
+              totalScore >= Math.round(totalPossibleScore * level.value) ? "bg-yellow-400" : "bg-gray-300"
             } rounded-full aspect-square ${
-              currentLevel === level.name ? "w-8 text-sm" : "w-6 h-6 text-xs"
+              currentLevel === level.name ? "w-10 text-base" : "w-7 text-sm"
             } not-first:before:w-16 before:h-2 before:absolute before:-translate-x-4/6 before:-z-10 ${
-              totalScore > Math.round(totalPossibleScore * level.value) ? "before:bg-yellow-400" : "before:bg-gray-300"
+              totalScore >= Math.round(totalPossibleScore * level.value) ? "before:bg-yellow-400" : "before:bg-gray-300"
             }`}>
-            {Math.round(totalPossibleScore * level.value)}
+            {totalScore > Math.round(totalPossibleScore * level.value) &&
+            totalScore < Math.round(totalPossibleScore * (levels[index + 1] ? levels[index + 1].value : 1))
+              ? totalScore
+              : Math.round(totalPossibleScore * level.value)}
           </div>
         ))}
       </div>
@@ -93,6 +116,7 @@ export default function WordForm({
           </div>
         ))}
       </div>
+      <Toaster />
     </div>
   );
 }

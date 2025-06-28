@@ -17,7 +17,7 @@ export default function Home() {
   console.log("Pangrams:", pangrams);
 
   return (
-    <div className="flex flex-col items-center max-w-5xl mx-auto py-56 min-h-screen">
+    <div className="flex flex-col items-center max-w-5xl mx-auto py-56">
       <h1 className="text-4xl font-bold mb-6">Word Hive</h1>
       <WordForm letters={letters} validWords={validWords} totalPossibleScore={totalPossibleScore} />
     </div>
