@@ -8,10 +8,12 @@ import toast, { Toaster } from "react-hot-toast";
 
 export default function WordForm({
   letters,
+  centerLetter,
   validWords,
   totalPossibleScore,
 }: {
   letters: string[];
+  centerLetter: string;
   validWords: Set<string>;
   totalPossibleScore: number;
 }) {
@@ -78,16 +80,18 @@ export default function WordForm({
 
   console.log({ validWords });
 
+  const nonCentralLetters = letters.filter((letter) => letter !== centerLetter);
+
   return (
-    <div className="flex flex-col min-w-lg justify-between gap-6">
-      <Input onKeyDown={guessWord} />
+    <div className="flex flex-col justify-between gap-6">
+      <Input onKeyDown={guessWord} className="!text-lg" />
       <div className="flex flex-wrap justify-center gap-4">
-        {letters.map((letter, index) => (
-          <LetterCard
-            key={index}
-            letter={letter}
-            isCentral={index === 0} // Assuming the first letter is the central one
-          />
+        {nonCentralLetters.slice(0, 3).map((letter, index) => (
+          <LetterCard key={index} letter={letter} isCentral={false} />
+        ))}
+        <LetterCard letter={centerLetter} isCentral={true} />
+        {nonCentralLetters.slice(3, 6).map((letter, index) => (
+          <LetterCard key={index} letter={letter} isCentral={false} />
         ))}
       </div>
       <div className="relative flex justify-between items-center min-h-10">
@@ -97,8 +101,8 @@ export default function WordForm({
             className={`transition-[width] duration-300 ease-in-out flex justify-center items-center text-black font-semibold ${
               totalScore >= Math.round(totalPossibleScore * level.value) ? "bg-yellow-400" : "bg-gray-300"
             } rounded-full aspect-square ${
-              currentLevel === level.name ? "w-10 text-base" : "w-7 text-sm"
-            } not-first:before:w-16 before:h-2 before:absolute before:-translate-x-4/6 before:-z-10 ${
+              currentLevel === level.name ? "w-7 text-sm sm:w-10 sm:text-base" : "w-6 text-xs sm:w-7 sm:text-sm"
+            } not-first:before:w-1/8 before:h-2 before:absolute before:-translate-x-1/2 before:-z-10 ${
               totalScore >= Math.round(totalPossibleScore * level.value) ? "before:bg-yellow-400" : "before:bg-gray-300"
             }`}>
             {totalScore > Math.round(totalPossibleScore * level.value) &&
