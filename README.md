@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🐝 Spelling Bee Game
 
-## Getting Started
+A web-based word puzzle game inspired by the _New York Times Spelling Bee_, built with **Next.js** and **MongoDB Atlas**.
 
-First, run the development server:
+Players are given **7 letters** and must form as many valid words as possible — with bonus points for discovering the **pangram**!
+
+---
+
+## ✨ Features
+
+- 🔤 Randomly generated 7-letter puzzles
+- 🧠 Words must be at least 4 letters long
+- 💡 One letter is **required in every word**
+- 🌟 Pangram detection (a word using **all 7 letters**)
+- 📆 Daily puzzle system backed by MongoDB
+- 📈 Scoring, tracking, and user submissions
+
+---
+
+## 🕹️ Game Rules
+
+### Goal
+
+Form as many valid English words as possible using only the 7 provided letters.
+
+### Rules
+
+- Words must be **at least 4 letters long**
+- Each word must include the **central letter**
+- Letters may be reused
+- Only dictionary-valid English words count
+- The same word cannot be entered twice
+- You earn more points for longer words (1 point for 4 letters; word length points for words over 4 letters)
+- You get a **bonus** for discovering a **pangram** — a word that uses all 7 letters at least once
+
+---
+
+## 🧠 Example
+
+If the letters are:  
+`G  L  A  C  I  E  R`  
+and the center letter is: **A**
+
+You can submit:
+
+- `grace` ✅
+- `cage` ✅
+- `glacier` ✅ (pangram!)
+- `rig` ❌ (too short)
+- `rice` ❌ (missing A)
+
+---
+
+## 🛠️ Project Structure
+
+```
+.
+├── actions/               # Server Actions for DB interaction
+├── app/
+│   ├── hints              # Hints for the daily puzzle
+│   ├── solution           # Solution of today's puzzle
+│   └── page.tsx           # Main UI
+├── components/
+│   └── ui                 # UI components (shadcn)
+├── lib/
+│   ├── utils.ts           # utility functions for operations on the words
+│   └── mongodb.ts         # MongoDB connection logic
+├── models/
+│   ├── DailyLetters.ts    # Mongoose model for puzzles
+│   └── DailyWords.ts      # Mongoose model for valid answers
+├── public/
+├── .env.local             # Contains MONGODB_URI
+└── README.md
+```
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourname/spelling-bee-game.git
+cd spelling-bee-game
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Set Up Environment Variables
+
+Create a `.env.local` file:
+
+```env
+MONGODB_URI=mongodb+srv://yourUser:yourPassword@yourCluster.mongodb.net/yourDb
+```
+
+### 4. Run the App
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧩 Future Ideas
 
-## Learn More
+- ✅ Daily leaderboard
+- ✅ User login (email or social)
+- ✅ Palindromes
+- ✅ Share results
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧑‍💻 Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Next.js (App Router)](https://nextjs.org)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+- [Mongoose](https://mongoosejs.com)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Shadcn](https://ui.shadcn.com/)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📄 License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT — feel free to use, modify, and build upon it!
