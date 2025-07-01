@@ -3,7 +3,7 @@ import { addDailyLetters } from "@/actions/add-daily-letters";
 import dayjs from "dayjs";
 dayjs().format();
 
-export default async function Solution() {
+export default async function SolutionPage() {
   const {
     data: { letters, centerLetter, date },
   } = await addDailyLetters();

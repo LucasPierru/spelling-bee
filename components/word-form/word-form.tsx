@@ -1,23 +1,25 @@
 "use client";
 
-import { KeyboardEvent, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import LetterCard from "../letter-card/letter-card";
 import { Input } from "../ui/input";
 import { calculateWordScore, capitalizeFirstLetter, isWordPangram } from "@/lib/words";
 import toast, { Toaster } from "react-hot-toast";
+import { getTodayDate } from "@/lib/utils";
+import { LoaderCircle } from "lucide-react";
+import ScoreIndicator from "../score-indicator/score-indicator";
 
-export default function WordForm({
-  letters,
-  centerLetter,
-  validWords,
-  totalPossibleScore,
-}: {
+type WordFormProps = {
   letters: string[];
   centerLetter: string;
   validWords: Set<string>;
   totalPossibleScore: number;
-}) {
+};
+
+export default function WordForm({ letters, centerLetter, validWords, totalPossibleScore }: WordFormProps) {
   const [guesses, setGuesses] = useState<Map<string, number>>(new Map());
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const levels = [
     { name: "start", value: 0 },
     { name: "beginner", value: 0.1 },
@@ -28,9 +30,15 @@ export default function WordForm({
     { name: "grandmaster", value: 0.6 },
     { name: "legend", value: 0.7 },
   ];
+  const date = getTodayDate();
 
-  /* console.log("Generated letters:", letters);
-  console.log("Valid words:", validWords); */
+  useEffect(() => {
+    const storedGuesses = localStorage.getItem(date);
+    if (storedGuesses) {
+      setGuesses(new Map(JSON.parse(storedGuesses)));
+    }
+    setIsLoading(false);
+  }, [date]);
 
   const guessWord = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === "Enter") {
@@ -58,6 +66,7 @@ export default function WordForm({
             },
           });
         }
+        localStorage.setItem(date, JSON.stringify(Array.from(guesses).concat([[value, score]])));
         setGuesses((prev) => new Map(prev).set(value, score));
         event.currentTarget.value = "";
       }
@@ -78,9 +87,15 @@ export default function WordForm({
   const totalScore = getTotalScore();
   const currentLevel = getCurrentLevel();
 
-  console.log({ validWords });
-
   const nonCentralLetters = letters.filter((letter) => letter !== centerLetter);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <LoaderCircle className="animate-spin w-16 h-16" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col justify-between gap-6">
@@ -96,27 +111,20 @@ export default function WordForm({
       </div>
       <div className="relative flex justify-between items-center min-h-10">
         {levels.map((level, index) => (
-          <div
+          <ScoreIndicator
             key={index}
-            className={`transition-[width] duration-300 ease-in-out flex justify-center items-center text-black font-semibold ${
-              totalScore >= Math.round(totalPossibleScore * level.value) ? "bg-yellow-400" : "bg-gray-300"
-            } rounded-full aspect-square ${
-              currentLevel === level.name ? "w-7 text-sm sm:w-10 sm:text-base" : "w-6 text-xs sm:w-7 sm:text-sm"
-            } not-first:before:w-1/8 before:h-2 before:absolute before:-translate-x-1/2 before:-z-10 ${
-              totalScore >= Math.round(totalPossibleScore * level.value) ? "before:bg-yellow-400" : "before:bg-gray-300"
-            }`}>
-            {totalScore > Math.round(totalPossibleScore * level.value) &&
-            totalScore < Math.round(totalPossibleScore * (levels[index + 1] ? levels[index + 1].value : 1))
-              ? totalScore
-              : Math.round(totalPossibleScore * level.value)}
-          </div>
+            currentScore={totalScore}
+            totalPossibleScore={totalPossibleScore}
+            currentLevel={currentLevel}
+            level={level}
+            nextLevel={levels[index + 1]}
+          />
         ))}
       </div>
       <div className="flex flex-col flex-wrap gap-2 max-h-60 overflow-y-auto">
         {Array.from(guesses).map(([guess], index) => (
           <div key={index} className="text-lg mx-2 font-semibold border-b border-border py-2 w-fit pr-1">
             {capitalizeFirstLetter(guess)}
-            {/*  - {score} */}
           </div>
         ))}
       </div>

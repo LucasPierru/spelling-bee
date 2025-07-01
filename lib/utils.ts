@@ -36,3 +36,9 @@ export function selectMultipleRandomElements(array: string[], count: number): st
   const shuffled = shuffleArray(array);
   return shuffled.slice(0, count);
 }
+
+export const getTodayDate = (): string => {
+  const now = new Date();
+  const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; // Format: YYYY-MM-DD (local timezone)
+  return date;
+};

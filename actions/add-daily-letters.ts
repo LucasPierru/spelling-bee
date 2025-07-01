@@ -1,13 +1,14 @@
 'use server';
 
 import { connectToMongoDB } from '@/lib/mongodb';
+import { getTodayDate } from '@/lib/utils';
 import { generateLetterSet } from '@/lib/words';
 import DailyLetters from '@/models/dailyLetters';
 
 export async function addDailyLetters() {
   try {
     await connectToMongoDB();
-    const date = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    const date = getTodayDate(); // Format: YYYY-MM-DD (local timezone)
 
     const existingLetters = await DailyLetters.findOne({ date });
     if (existingLetters) {
