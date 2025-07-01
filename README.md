@@ -58,7 +58,7 @@ You can submit:
 ├── actions/               # Server Actions for DB interaction
 ├── app/
 │   ├── hints              # Hints for the daily puzzle
-│   ├── solution           # Solution of today's puzzle
+│   ├── solution           # Solution of yesterday's puzzle
 │   └── page.tsx           # Main UI
 ├── components/
 │   └── ui                 # UI components (shadcn)

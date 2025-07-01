@@ -37,8 +37,9 @@ export function selectMultipleRandomElements(array: string[], count: number): st
   return shuffled.slice(0, count);
 }
 
-export const getTodayDate = (): string => {
+export const getTodayDate = (offsetDays: number = 0): string => {
   const now = new Date();
+  now.setDate(now.getDate() + offsetDays);
   const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; // Format: YYYY-MM-DD (local timezone)
   return date;
 };

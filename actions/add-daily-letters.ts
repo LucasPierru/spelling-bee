@@ -26,3 +26,19 @@ export async function addDailyLetters() {
     return { success: false, error: 'Failed to add letters of the day.' };
   }
 }
+
+export async function getYesterdaysLetters() {
+  try {
+    await connectToMongoDB();
+    const date = getTodayDate(-1);
+    const existingLetters = await DailyLetters.findOne({ date });
+    if (existingLetters) {
+      return { success: true, data: existingLetters };
+    } else {
+      return { success: false, error: 'No letters found for yesterday.' };
+    }
+  } catch (error) {
+    console.error('Failed to get yesterday\'s letters:', error);
+    return { success: false, error: 'Failed to get letters of yesterday.' };
+  }
+}

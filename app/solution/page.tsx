@@ -1,12 +1,12 @@
 import { calculateWordScore, getWordsByLetters, isWordPangram } from "@/lib/words";
-import { addDailyLetters } from "@/actions/add-daily-letters";
+import { getYesterdaysLetters } from "@/actions/add-daily-letters";
 import dayjs from "dayjs";
 dayjs().format();
 
 export default async function SolutionPage() {
   const {
     data: { letters, centerLetter, date },
-  } = await addDailyLetters();
+  } = await getYesterdaysLetters();
 
   const validWords = getWordsByLetters(letters);
 
