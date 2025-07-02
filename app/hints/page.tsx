@@ -9,7 +9,7 @@ export default async function HintsPage() {
   const date = getTodayDate();
   const {
     data: { letters, centerLetter },
-  } = await addDailyLetters(date);
+  } = await addDailyLetters();
 
   const validWords = getWordsByLetters(letters);
   const totalPossibleScore = Array.from(validWords).reduce((acc, word) => acc + calculateWordScore(word, letters), 0);
