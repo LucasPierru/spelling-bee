@@ -2,12 +2,14 @@ import { calculateWordScore, getWordsByLetters, isWordPangram } from "@/lib/word
 import { addDailyLetters } from "@/actions/add-daily-letters";
 import dayjs from "dayjs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getTodayDate } from "@/lib/utils";
 dayjs().format();
 
 export default async function HintsPage() {
+  const date = getTodayDate();
   const {
-    data: { letters, centerLetter, date },
-  } = await addDailyLetters();
+    data: { letters, centerLetter },
+  } = await addDailyLetters(date);
 
   const validWords = getWordsByLetters(letters);
   const totalPossibleScore = Array.from(validWords).reduce((acc, word) => acc + calculateWordScore(word, letters), 0);

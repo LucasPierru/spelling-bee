@@ -1,15 +1,15 @@
 'use server';
 
 import { connectToMongoDB } from '@/lib/mongodb';
-import { getTodayDate } from '@/lib/utils';
 import { generateLetterSet } from '@/lib/words';
 import DailyLetters from '@/models/dailyLetters';
 
-export async function addDailyLetters() {
+export async function addDailyLetters(date: string) {
   try {
     await connectToMongoDB();
-    const date = getTodayDate(); // Format: YYYY-MM-DD (local timezone)
-
+    if (!date) {
+      throw new Error('Invalid date provided');
+    }
     const existingLetters = await DailyLetters.findOne({ date });
     if (existingLetters) {
       return { success: true, data: existingLetters };
@@ -27,10 +27,9 @@ export async function addDailyLetters() {
   }
 }
 
-export async function getYesterdaysLetters() {
+export async function getYesterdaysLetters(date: string) {
   try {
     await connectToMongoDB();
-    const date = getTodayDate(-1);
     const existingLetters = await DailyLetters.findOne({ date });
     if (existingLetters) {
       return { success: true, data: existingLetters };

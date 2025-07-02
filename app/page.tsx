@@ -1,11 +1,14 @@
 import WordForm from "@/components/word-form/word-form";
 import { calculateWordScore, getWordsByLetters, scrambleLetters } from "@/lib/words";
 import { addDailyLetters } from "../actions/add-daily-letters";
+import { getTodayDate } from "@/lib/utils";
 
 export default async function Home() {
+  const date = getTodayDate(); // Format: YYYY-MM-DD (local timezone)
+
   const {
     data: { letters, centerLetter },
-  } = await addDailyLetters();
+  } = await addDailyLetters(date);
 
   const validWords = getWordsByLetters(letters);
   const scrambledLetters = scrambleLetters(letters);
