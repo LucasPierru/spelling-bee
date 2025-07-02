@@ -6,7 +6,7 @@ import DailyLetters from '@/models/dailyLetters';
 export async function addDailyLetters() {
   try {
     await connectToMongoDB();
-    const existingLetters = await DailyLetters.findOne();
+    const existingLetters = await DailyLetters.findOne().sort({ date: -1 });
     if (existingLetters) {
       return { success: true, data: existingLetters };
     } else {
