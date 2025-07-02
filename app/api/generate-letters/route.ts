@@ -10,8 +10,10 @@ export async function GET() {
 
     const letters: string[] = generateLetterSet();
     const centerLetter = letters[0]
-    const result = await DailyLetters.create(
-      { date, letters, centerLetter },
+    const result = await DailyLetters.findOneAndUpdate(
+      { date },
+      { letters, centerLetter },
+      { new: true, upsert: true }
     );
     return Response.json({ success: true, data: result });
   } catch (error) {
