@@ -15,8 +15,8 @@ export default async function Home() {
   return (
     <div className="flex flex-col items-center max-w-5xl h-[calc(100vh-5rem)] mx-auto p-4 md:py-56">
       <h1 className="text-4xl font-bold mb-4">Word Hive</h1>
-      <h2 className="text-xl font-semibold mb-1">Find as many words as you can!</h2>
-      <span className="text-lg mb-2">
+      <h2 className="text-xl text-center font-semibold mb-1">Find as many words as you can!</h2>
+      <span className="text-lg text-center mb-4">
         Each words must must include the central letter and must be 4 letters minimum
       </span>
       <WordForm

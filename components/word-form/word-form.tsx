@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyboardEvent, useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useState, useRef } from "react";
 import LetterCard from "../letter-card/letter-card";
 import { Input } from "../ui/input";
 import { calculateWordScore, capitalizeFirstLetter, isWordPangram } from "@/lib/words";
@@ -19,6 +19,7 @@ type WordFormProps = {
 export default function WordForm({ letters, centerLetter, validWords, totalPossibleScore }: WordFormProps) {
   const [guesses, setGuesses] = useState<Map<string, number>>(new Map());
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const levels = [
     { name: "start", value: 0 },
@@ -89,6 +90,13 @@ export default function WordForm({ letters, centerLetter, validWords, totalPossi
 
   const nonCentralLetters = letters.filter((letter) => letter !== centerLetter);
 
+  const addLetter = (letter: string): void => {
+    if (inputRef.current) {
+      inputRef.current.value += letter;
+      inputRef.current.focus();
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -99,14 +107,14 @@ export default function WordForm({ letters, centerLetter, validWords, totalPossi
 
   return (
     <div className="flex flex-col justify-between gap-6">
-      <Input onKeyDown={guessWord} className="!text-lg" />
+      <Input autoFocus ref={inputRef} onKeyDown={guessWord} className="!text-lg" />
       <div className="flex flex-wrap justify-center gap-4">
         {nonCentralLetters.slice(0, 3).map((letter, index) => (
-          <LetterCard key={index} letter={letter} isCentral={false} />
+          <LetterCard key={index} letter={letter} isCentral={false} addLetter={addLetter} />
         ))}
-        <LetterCard letter={centerLetter} isCentral={true} />
+        <LetterCard letter={centerLetter} isCentral={true} addLetter={addLetter} />
         {nonCentralLetters.slice(3, 6).map((letter, index) => (
-          <LetterCard key={index} letter={letter} isCentral={false} />
+          <LetterCard key={index} letter={letter} isCentral={false} addLetter={addLetter} />
         ))}
       </div>
       <div className="relative flex justify-between items-center min-h-10">
