@@ -3,6 +3,6 @@ import { revalidatePath } from 'next/cache';
 
 export async function GET() {
   // Optional: add a secret or auth if you want
-  revalidatePath('/');
+  revalidatePath('/', 'layout');
   return NextResponse.json({ revalidated: true });
 }
